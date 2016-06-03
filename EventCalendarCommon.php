@@ -4,50 +4,88 @@
 class EventCalendarCommon
 {
     protected $langExt = [];
-
     protected $dataDir;
-    protected $eventData;
+    protected $configurationFile;
+
+    /**
+     * @var array
+     */
+    protected $configuration;
+
+    protected $categoriesFile;
+
+    /**
+     * @var array
+     */
+    protected $categories;
+
+    protected $events;
 
     public function __construct()
     {
-
         self::Init();
     }
 
     public function Init()
     {
         global $addonPathData;
-        $this->langExt = $this->getLangExt();
+        $this->langExt = $this->GetLangExt();
 
         $this->dataDir = $addonPathData;
 
-        $this->eventData = $this->getEventData();
+        $this->configurationFile = $this->dataDir . '/configuration.php';
+        $this->LoadConfiguration();
 
+        $this->categoriesFile = $this->dataDir . '/categories.php';
+        $this->LoadCategories();
     }
 
     /**
-     * load language
+     * Configuration
      */
-    protected function getEventData()
+
+    protected function LoadConfiguration()
     {
-        $eventData = [];
-        if (file_exists($this->dataDir . '/data-events.csv')) {
-            ini_set("auto_detect_line_endings", "1");
-            $source        = @fopen($this->dataDir . '/data-events.csv', "rt");
-
-            var_dump($source);
+        if (file_exists($this->configurationFile)) {
+            include_once $this->configurationFile;
         }
-        return $eventData;
+
+        if (isset($configuration)) {
+            $this->configuration = $configuration;
+        } else {
+            $this->configuration = [
+                'title'      => 'EventCalendar',
+                'dateFormat' => 'dd.mm.yy'
+            ];
+        }
     }
 
     /**
-     * load language
+     * Categories
      */
-    protected function getLangExt()
+
+    protected function LoadCategories()
+    {
+        if (file_exists($this->categoriesFile)) {
+            include_once $this->categoriesFile;
+        }
+
+        if (isset($categories)) {
+            $this->categories = $categories;
+        } else {
+            $this->categories = [];
+        }
+    }
+
+
+    /**
+     * load Language
+     */
+    protected function GetLangExt()
     {
         global $config;
 
-        $langfile = '/l10n/' . $config['language'] . '.php';
+        $langfile = '/languages/' . $config['language'] . '.php';
         $lang_ext = [];
 
         if (file_exists(dirname(__FILE__) . $langfile)) {

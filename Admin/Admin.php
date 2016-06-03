@@ -9,11 +9,15 @@ class EventCalendarAdmin extends EventCalendarCommon
         global $addonFolderName, $page;
 
         parent::__construct();
-//        EventCalendarCommon::Init();
-        echo 'Admin';
 
-//        common::LoadComponents('bootstrap3-all');
-        $page->head_js[]	= '/data/_addoncode/'.$addonFolderName.'/assets/js/admin.js';
+//        common::LoadComponents('dialog');
+//        common::LoadComponents('datepicker');
+
+//        $page->css_admin[]	= '/data/_addoncode/'.$addonFolderName.'/assets/css/jquery.timepicker.css';
         $page->css_admin[]	= '/data/_addoncode/'.$addonFolderName.'/assets/css/admin.css';
+
+
+//        $page->head_js[]	= '/data/_addoncode/'.$addonFolderName.'/assets/js/jquery.timepicker.min.js';
+        $page->head_js[]	= '/data/_addoncode/'.$addonFolderName.'/assets/js/admin.js';
     }
 }
