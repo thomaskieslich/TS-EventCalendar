@@ -164,7 +164,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         global $langmessage;
 
         if (count($this->categories > 0)) {
-            $success = gpFiles::SaveData($this->categoriesFile, 'categories', $this->categories);
+            $success = gpFiles::SaveData($this->categoryFile, 'categories', $this->categories);
             if ($success) {
                 msg($langmessage['SAVED']);
 

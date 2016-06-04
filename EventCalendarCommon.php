@@ -6,19 +6,10 @@ class EventCalendarCommon
     protected $langExt = [];
     protected $dataDir;
     protected $configurationFile;
-
-    /**
-     * @var array
-     */
     protected $configuration;
-
-    protected $categoriesFile;
-
-    /**
-     * @var array
-     */
+    protected $categoryFile;
     protected $categories;
-
+    protected $eventFile;
     protected $events;
 
     public function __construct()
@@ -28,24 +19,27 @@ class EventCalendarCommon
 
     public function Init()
     {
-        global $addonPathData;
+        global $addonPathData, $page, $config;
+        $page->head_script .= "\n" . 'var event_lang = "' . $config['language'] . '";';
         $this->langExt = $this->GetLangExt();
 
         $this->dataDir = $addonPathData;
 
         $this->configurationFile = $this->dataDir . '/configuration.php';
-        $this->LoadConfiguration();
+        $this->categoryFile      = $this->dataDir . '/categories.php';
+        $this->eventFile         = $this->dataDir . '/events.csv';
 
-        $this->categoriesFile = $this->dataDir . '/categories.php';
-        $this->LoadCategories();
+        $this->LoadData();
     }
 
     /**
-     * Configuration
+     * Load Data
      */
-
-    protected function LoadConfiguration()
+    protected function LoadData()
     {
+        global $page;
+
+        //Configuration
         if (file_exists($this->configurationFile)) {
             include_once $this->configurationFile;
         }
@@ -54,20 +48,18 @@ class EventCalendarCommon
             $this->configuration = $configuration;
         } else {
             $this->configuration = [
-                'title'      => 'EventCalendar',
-                'dateFormat' => 'dd.mm.yy'
+                'title'          => 'EventCalendar',
+                'dateFormat'     => 'dd.mm.yy',
+                'dateFormatSite' => '%d.%m.%Y',
+                'timeFormatSite' => '%H:%M',
             ];
         }
-    }
 
-    /**
-     * Categories
-     */
+        $page->head_script .= "\n" . 'var event_date_format = "' . $this->configuration['dateFormat'] . '";';
 
-    protected function LoadCategories()
-    {
-        if (file_exists($this->categoriesFile)) {
-            include_once $this->categoriesFile;
+        //Categories
+        if (file_exists($this->categoryFile)) {
+            include_once $this->categoryFile;
         }
 
         if (isset($categories)) {
@@ -75,11 +67,38 @@ class EventCalendarCommon
         } else {
             $this->categories = [];
         }
+
+        //Events
+        $this->LoadEvents();
     }
 
+    protected function LoadEvents(){
+        $this->events = [];
+        if (file_exists($this->eventFile)) {
+            $file = @fopen($this->eventFile, 'r') or die("Error opening file");
+            $cols = fgetcsv($file);
+            $start_day = [];
+            $start_time = [];
+            while ($line = fgetcsv($file, 2048, ',')) {
+                $event = [];
+                $c     = 0;
+                foreach ($line as $key => $col) {
+                    $event[$cols[$c]] = $col;
+                    $c++;
+                }
+                $this->events[] = $event;
+                $start_day[] = $line[1];
+                $start_time[] = $line[2];
+            }
+            fclose($file);
 
+            //sort
+            array_multisort($start_day, SORT_DESC, $start_time, SORT_ASC, $this->events);
+            return true;
+        }
+    }
     /**
-     * load Language
+     * Load Language
      */
     protected function GetLangExt()
     {
