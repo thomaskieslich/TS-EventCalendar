@@ -43,7 +43,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         $content = '';
         $content .= '<div class="inline_box">';
         $content .= '<h3>' . $this->langExt['Edit Categories'] . '</h3>';
-        $content .= '<form name="categories" action="' . common::GetUrl('Admin_Event_Categories') . '" method="post">';
+        $content .= '<form name="categories" action="' . common::GetUrl('Admin_EventCalendar_Categories') . '" method="post">';
         $content .= '<table class="bordered">';
 
         $content .= '<thead><tr>';
@@ -71,7 +71,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
 //                $content .= '<input type="checkbox" ' . $checked . ' name="categories[' . $key . '][hidden]" />';
                 $content .= '</td><td>';
                 $content .= common::Link(
-                    'Admin_Event_Categories',
+                    'Admin_EventCalendar_Categories',
                     $langmessage['delete'],
                     'cmd=delete_category&index=' . $key,
                     'class="gpconfirm" title="' . $this->langExt['Delete Categorie'] . '" '
@@ -87,7 +87,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         $content .= '<input type="submit" value="' . $langmessage['save_changes'] . '" class="gpsubmit"/>';
         $content .= ' &nbsp; ';
         $content .= common::Link(
-            'Admin_Event_Categories',
+            'Admin_EventCalendar_Categories',
             $this->langExt['New Categorie'],
             'cmd=new_category',
             ' name="gpabox" class="gpsubmit"'
@@ -109,7 +109,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         $content .= '<div class="inline_box">';
         $content .= '<h3>' . $this->langExt['New Categorie'] . '</h3>';
 
-        $content .= '<form name="addcategory" action="' . common::GetUrl('Admin_Event_Categories') . '" method="post">';
+        $content .= '<form name="addcategory" action="' . common::GetUrl('Admin_EventCalendar_Categories') . '" method="post">';
         $content .= '<input type="hidden" name="cmd" value="save_new_category" />';
         $content .= '<p>' . $langmessage['title'] . ' <input type="text" name="new_category" value="" class="gpinput" /></p>';
 

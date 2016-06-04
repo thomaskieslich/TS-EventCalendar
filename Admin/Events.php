@@ -48,7 +48,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $content = '';
         $content .= '<div class="inline_box">';
         $content .= '<h3>' . $this->langExt['Edit Events'] . '</h3>';
-        $content .= '<form name="events" action="' . common::GetUrl('Admin_Events') . '" method="post">';
+        $content .= '<form name="events" action="' . common::GetUrl('Admin_EventCalendar_Events') . '" method="post">';
         $content .= '<table class="bordered full_width">';
 
         $content .= '<thead><tr>';
@@ -91,13 +91,13 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
             $content .= '<td>' . $event['description'] . '</td>';
             $content .= '<td>';
             $content .= common::Link(
-                'Admin_Events',
+                'Admin_EventCalendar_Events',
                 $langmessage['edit'],
                 'cmd=edit_event&index=' . $key,
                 ' name="gpabox" class="gpsubmit" '
             );
             $content .= common::Link(
-                'Admin_Events',
+                'Admin_EventCalendar_Events',
                 $langmessage['delete'],
                 'cmd=delete_event&index=' . $key,
                 ' name="gpabox" class="gpconfirm gpsubmit" title="' . $this->langExt['Delete Event'] . '" '
@@ -115,7 +115,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $content .= '<input type="submit" value="' . $this->langExt['Reload Events'] . '" class="gpsubmit"/>';
         $content .= ' &nbsp; ';
         $content .= common::Link(
-            'Admin_Events',
+            'Admin_EventCalendar_Events',
             $this->langExt['New Event'],
             'cmd=edit_event',
             ' name="gpabox" class="gpsubmit"'
@@ -144,9 +144,9 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $content .= '<div class="inline_box">';
         $content .= '<h3>' . $this->langExt['Edit Event'] . '</h3>';
 
-        $content .= '<form name="editevent" action="' . common::GetUrl('Admin_Events') . '" method="post">';
+        $content .= '<form name="editevent" action="' . common::GetUrl('Admin_EventCalendar_Events') . '" method="post">';
         $content .= '<input type="hidden" name="cmd" value="update_event" />';
-        if ($index) {
+        if (isset($index) && $index >= 0) {
             $content .= '<input type="hidden" name="event[index]" value="' . (int)$_GET['index'] . '" />';
         }
 
@@ -253,6 +253,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
             } else {
                 $event['categories'] = '';
             }
+
             if (isset($_POST['event']['index'])) {
                 $this->events[$_POST['event']['index']] = $event;
             } else {
@@ -276,6 +277,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
 
             $this->SaveEvents();
             $this->LoadEvents();
+            $this->ShowEvents();
         } else {
             msg($langmessage['OOPS']);
         }

@@ -28,7 +28,7 @@ class EventCalendarAdminConfiguration extends EventCalendarAdmin
         $content .= '<div class="inline_box">';
         $content .= '<h3>' . $this->langExt['configuration'] . '</h3>';
 
-        $content .= '<form name="editconfig" action="' . common::GetUrl('Admin_Configuration') . '" method="post">';
+        $content .= '<form name="editconfig" action="' . common::GetUrl('Admin_EventCalendar_Configuration') . '" method="post">';
         $content .= '<input type="hidden" name="cmd" value="save_configuration" />';
         $content .= '<table class="bordered"><tbody>';
 
