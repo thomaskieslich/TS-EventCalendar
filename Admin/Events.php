@@ -57,6 +57,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $content .= '<th>' . $this->langExt['End Day'] . '</th>';
         $content .= '<th>' . $this->langExt['End Time'] . '</th>';
         $content .= '<th>' . $this->langExt['Title'] . '</th>';
+        $content .= '<th>' . $this->langExt['Location'] . '</th>';
         $content .= '<th>' . $this->langExt['Description'] . '</th>';
         $content .= '<th>' . $this->langExt['Options'] . '</th>';
         $content .= '</tr></thead>';
@@ -88,6 +89,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
                 $content .= '<td>&nbsp;</td>';
             }
             $content .= '<td>' . $event['title'] . '</td>';
+//            $content .= '<td>' . $event['location'] . '</td>';
             $content .= '<td>' . $event['description'] . '</td>';
             $content .= '<td>';
             $content .= common::Link(
@@ -153,7 +155,11 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $content .= '<table><tbody>';
 
         $content .= '<tr><td colspan="2">';
-        $content .= '<label for="title">' . $langmessage['title'] . '*</label><input type="text" name="event[title]" value="' . @$event['title'] . '" class="gpinput full_width" />';
+        $content .= '<label for="title">' . $this->langExt['Title'] . '*</label><input type="text" name="event[title]" value="' . @$event['title'] . '" class="gpinput full_width" />';
+        $content .= '</td></tr>';
+
+        $content .= '<tr><td colspan="2">';
+        $content .= '<label for="location">' . $this->langExt['Location'] . '</label><input type="text" name="event[location]" value="' . @$event['location'] . '" class="gpinput full_width" />';
         $content .= '</td></tr>';
 
         $content .= '<tr><td>';
@@ -242,6 +248,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         if (isset($_POST) && $_POST['event']['title'] && $_POST['event']['start_day']) {
             $event                = [];
             $event['title']       = htmlspecialchars(trim($_POST['event']['title']));
+            $event['location']       = htmlspecialchars(trim($_POST['event']['location']));
             $event['start_day']   = strtotime(htmlspecialchars(trim($_POST['event']['start_day'])));
             $event['start_time']  = strtotime(htmlspecialchars(trim($_POST['event']['start_time'])));
             $event['end_day']     = strtotime(htmlspecialchars(trim($_POST['event']['end_day'])));
