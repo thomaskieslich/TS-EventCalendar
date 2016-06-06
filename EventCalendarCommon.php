@@ -87,8 +87,8 @@ class EventCalendarCommon
                     $c++;
                 }
                 $this->events[] = $event;
-                $start_day[] = $line[1];
-                $start_time[] = $line[2];
+                $start_day[] = (int)$line[2];
+                $start_time[] = (int)$line[3];
             }
             fclose($file);
 

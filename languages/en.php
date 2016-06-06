@@ -11,6 +11,7 @@ $lang_ext = array(
     'End Time'=>		'End Time',
     'All Day'=>		'All Day',
     'Title'=>		'Title',
+    'to'=>		'bis',
     'Location'=>		'Location',
     'Description'=>		'Description',
     'Categories'=>		'Categories',
