@@ -8,8 +8,6 @@ class EventCalendarListPage extends EventCalendarCommon
 {
     public function __construct()
     {
-        global $addonPathData;
-
         parent::__construct();
 
         $current_date = getdate();
