@@ -48,9 +48,8 @@ class EventCalendarCommon
         } else {
             self::$configuration = [
                 'title'          => 'EventCalendar',
-                'dateFormat'     => 'dd.mm.yy',
-                'dateFormatSite' => '%d.%m.%Y',
-                'timeFormatSite' => '%H:%M',
+                'dateFormat' => '%d.%m.%Y',
+                'timeFormat' => '%H:%M',
             ];
         }
 

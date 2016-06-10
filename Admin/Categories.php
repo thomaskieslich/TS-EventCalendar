@@ -15,48 +15,48 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
 
             //creating
             case 'new_category':
-                $this->NewCategory();
+                self::NewCategory();
 
                 return;
             case 'save_new_category';
-                $this->SaveNewCategory();
+                self::SaveNewCategory();
 
                 return;
             case 'update_categories';
-                $this->UpdateCategories();
+                self::UpdateCategories();
 
                 return;
             case 'delete_category';
-                $this->DeleteCategory();
+                self::DeleteCategory();
 
                 return;
             default;
-                $this->ShowCategories();
+                self::ShowCategories();
         }
     }
 
 
-    protected function ShowCategories()
+    public static function ShowCategories()
     {
         global $langmessage, $addonRelativeCode;
 
         $content = '';
         $content .= '<div class="inline_box">';
-        $content .= '<h3>' . $this->langExt['Edit Categories'] . '</h3>';
+        $content .= '<h3>' . self::$langExt['Edit Categories'] . '</h3>';
         $content .= '<form name="categories" action="' . common::GetUrl('Admin_EventCalendar_Categories') . '" method="post">';
         $content .= '<table class="bordered">';
 
         $content .= '<thead><tr>';
         $content .= '<th>&nbsp;</th>';
-        $content .= '<th>' . $this->langExt['Category'] . '</th>';
-//        $content .= '<th>' . $this->langExt['Events'] . '</th>';
-//        $content .= '<th>' . $this->langExt['Hidden'] . '</th>';
-        $content .= '<th>' . $this->langExt['Options'] . '</th>';
+        $content .= '<th>' . self::$langExt['Category'] . '</th>';
+//        $content .= '<th>' . self::langExt['Events'] . '</th>';
+//        $content .= '<th>' . self::langExt['Hidden'] . '</th>';
+        $content .= '<th>' . self::$langExt['Options'] . '</th>';
         $content .= '</tr></thead>';
 
         $content .= '<tbody class="sortable_table">';
-        if (count($this->categories > 0)) {
-            foreach ($this->categories as $key => $value) {
+        if (count(self::$categories > 0)) {
+            foreach (self::$categories as $key => $value) {
                 $content .= '<tr><td style="vertical-align:middle">';
                 $content .= '<img src="' . $addonRelativeCode . '/assets/img/grip.png" height="15" width="15" style="padding:2px;cursor:pointer;"/>';
                 $content .= '</td><td>';
@@ -74,7 +74,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
                     'Admin_EventCalendar_Categories',
                     $langmessage['delete'],
                     'cmd=delete_category&index=' . $key,
-                    'class="gpconfirm" title="' . $this->langExt['Delete Categorie'] . '" '
+                    'class="gpconfirm" title="' . self::$langExt['Delete Categorie'] . '" '
                 );
                 $content .= '</td></tr>';
             }
@@ -88,7 +88,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         $content .= ' &nbsp; ';
         $content .= common::Link(
             'Admin_EventCalendar_Categories',
-            $this->langExt['New Categorie'],
+            self::$langExt['New Categorie'],
             'cmd=new_category',
             ' name="gpabox" class="gpsubmit"'
         );
@@ -101,13 +101,13 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         echo $content;
     }
 
-    protected function NewCategory()
+    public static function NewCategory()
     {
         global $langmessage;
 
         $content = '';
         $content .= '<div class="inline_box">';
-        $content .= '<h3>' . $this->langExt['New Categorie'] . '</h3>';
+        $content .= '<h3>' . self::langExt['New Categorie'] . '</h3>';
 
         $content .= '<form name="addcategory" action="' . common::GetUrl('Admin_EventCalendar_Categories') . '" method="post">';
         $content .= '<input type="hidden" name="cmd" value="save_new_category" />';
@@ -122,49 +122,49 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         echo $content;
     }
 
-    protected function SaveNewCategory()
+    public static function SaveNewCategory()
     {
         global $langmessage;
 
         if (isset($_POST) && $_POST['new_category']) {
-            $this->categories[]['label'] = htmlspecialchars(trim($_POST['new_category']));
-            $this->SaveCategories();
+            self::$categories[]['label'] = htmlspecialchars(trim($_POST['new_category']));
+            self::SaveCategories();
         } else {
             msg($langmessage['OOPS']);
         }
-        $this->ShowCategories();
+        self::ShowCategories();
     }
 
-    protected function DeleteCategory()
+    public static function DeleteCategory()
     {
         if (isset($_GET) && $_GET['index']) {
-            unset($this->categories[(int)$_GET['index']]);
+            unset(self::$categories[(int)$_GET['index']]);
         }
-        $this->SaveCategories();
-        $this->ShowCategories();
+        self::SaveCategories();
+        self::ShowCategories();
     }
 
-    protected function UpdateCategories()
+    public static function UpdateCategories()
     {
         if (isset($_POST) && $_POST['categories']) {
-            $this->categories = [];
+            self::$categories = [];
             foreach ($_POST['categories'] as $key => $value) {
-                $this->categories[$key]['label'] = htmlspecialchars(trim($value['label']));
+                self::$categories[$key]['label'] = htmlspecialchars(trim($value['label']));
 //                if (isset($value['hidden'])) {
 //                    $this->categories[$key]['hidden'] = htmlspecialchars(trim($value['hidden']));
 //                }
             }
-            $this->SaveCategories();
-            $this->ShowCategories();
+            self::SaveCategories();
+            self::ShowCategories();
         }
     }
 
-    protected function SaveCategories()
+    public static function SaveCategories()
     {
         global $langmessage;
 
-        if (count($this->categories > 0)) {
-            $success = gpFiles::SaveData($this->categoryFile, 'categories', $this->categories);
+        if (count(self::$categories > 0)) {
+            $success = gpFiles::SaveData(self::$categoryFile, 'categories', self::$categories);
             if ($success) {
                 msg($langmessage['SAVED']);
 

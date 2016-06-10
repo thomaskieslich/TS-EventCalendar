@@ -14,26 +14,26 @@ class EventCalendarAdminConfiguration extends EventCalendarAdmin
         $cmd = common::GetCommand();
         switch ($cmd) {
             case 'save_configuration':
-                $this->SaveConfiguration();
+                self::SaveConfiguration();
                 break;
         }
-        $this->ShowConfiguration();
+        self::ShowConfiguration();
     }
 
-    protected function ShowConfiguration()
+    public static function ShowConfiguration()
     {
         global $langmessage;
 
         $content = '';
         $content .= '<div class="inline_box">';
-        $content .= '<h3>' . $this->langExt['configuration'] . '</h3>';
+        $content .= '<h3>' . self::$langExt['configuration'] . '</h3>';
 
         $content .= '<form name="editconfig" action="' . common::GetUrl('Admin_EventCalendar_Configuration') . '" method="post">';
         $content .= '<input type="hidden" name="cmd" value="save_configuration" />';
         $content .= '<table class="bordered"><tbody>';
 
-        foreach ($this->configuration as $label => $value) {
-            $content .= '<tr><td>' . $this->langExt['conf_' . $label] . '</td><td> <input type="text" name="' . $label . '" value="' . $value . '" class="gpinput" /></td></tr>';
+        foreach (self::$configuration as $label => $value) {
+            $content .= '<tr><td>' . self::$langExt['conf_' . $label] . '</td><td> <input type="text" name="' . $label . '" value="' . $value . '" class="gpinput" /></td></tr>';
         }
 
         $content .= '<tr><td colspan="2">';
@@ -48,19 +48,19 @@ class EventCalendarAdminConfiguration extends EventCalendarAdmin
     }
 
 
-    protected function SaveConfiguration()
+    public static function SaveConfiguration()
     {
         global $langmessage;
 
         if (isset($_POST)) {
             foreach ($_POST as $field => $value) {
-                if (array_key_exists($field, $this->configuration)) {
-                    $this->configuration[$field] = htmlspecialchars(trim($value));
+                if (array_key_exists($field, self::$configuration)) {
+                    self::$configuration[$field] = htmlspecialchars(trim($value));
                 }
             }
         }
 
-        $success = gpFiles::SaveData($this->configurationFile, 'configuration', $this->configuration);
+        $success = gpFiles::SaveData(self::$configurationFile, 'configuration', self::$configuration);
 
         if ($success) {
             msg($langmessage['SAVED']);

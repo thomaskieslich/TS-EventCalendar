@@ -29,7 +29,6 @@ $lang_ext = array(
     'Edit Event'=>		'Edit Event',
     'configuration'=>		'EventCalendar Configuration',
     'conf_title'=>		'EventCalendar Title',
-    'conf_dateFormat'=>		'Date Format Input',
-    'conf_dateFormatSite'=>		'Date Format Website',
-    'conf_timeFormatSite'=>		'Time Format Website',
+    'conf_dateFormat'=>		'Date Format',
+    'conf_timeFormat'=>		'Time Format',
 );
