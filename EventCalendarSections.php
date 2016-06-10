@@ -6,11 +6,6 @@ gpPlugin_incl('EventCalendarCommon.php');
 
 class EventCalendarSections extends EventCalendarCommon
 {
-//    public function __construct()
-//    {
-//        EventCalendarCommon::Init();
-//    }
-
     public static function SectionTypes($section_types)
     {
         $section_types['CalendarList'] = array(
@@ -84,12 +79,7 @@ class EventCalendarSections extends EventCalendarCommon
             return $section_data;
         };
 
-        if ($section_data['listTitle'] != '') {
-            $section_data['content'] = '<h3>' . $section_data['listTitle'] . '</h3>';
-        }
-        $section_data['content'] .= '<div>' . $section_data['maxItems'] . '</div>';
-
-        $section_data['content'] .= EventCalendarCommon::CreateList($section_data['maxItems'], $section_data['categories']);
+        $section_data['content'] .= EventCalendarCommon::CreateList($section_data);
 
         return $section_data;
     }

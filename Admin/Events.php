@@ -59,6 +59,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $content .= '<th>' . self::$langExt['Title'] . '</th>';
         $content .= '<th>' . self::$langExt['Location'] . '</th>';
         $content .= '<th>' . self::$langExt['Description'] . '</th>';
+        $content .= '<th>' . self::$langExt['Category'] . '</th>';
         $content .= '<th>' . self::$langExt['Options'] . '</th>';
         $content .= '</tr></thead>';
 
@@ -89,8 +90,13 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
                 $content .= '<td>&nbsp;</td>';
             }
             $content .= '<td>' . $event['title'] . '</td>';
-//            $content .= '<td>' . $event['location'] . '</td>';
+            $content .= '<td>' . $event['location'] . '</td>';
             $content .= '<td>' . $event['description'] . '</td>';
+            if ($event['category'] != '') {
+                $content .= '<td style="color: ' . self::$categories[$event['category']]['color'] . ' !important;">' . self::$categories[$event['category']]['label'] . '</td>';
+            } else {
+                $content .= '<td>&nbsp;</td>';
+            }
             $content .= '<td>';
             $content .= common::Link(
                 'Admin_EventCalendar_Events',
@@ -152,7 +158,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
             $content .= '<input type="hidden" name="event[index]" value="' . (int)$_GET['index'] . '" />';
         }
 
-        $content .= '<table><tbody>';
+        $content .= '<table class="bordered"><tbody>';
 
         $content .= '<tr><td colspan="2">';
         $content .= '<label for="title">' . self::$langExt['Title'] . '*</label><input type="text" name="event[title]" value="' . @$event['title'] . '" class="gpinput full_width" />';
@@ -213,7 +219,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
 
         foreach (self::$categories as $key => $category) {
             $selected = '';
-            if (isset($event['category']) && $key == $event['category']) {
+            if ($event['category'] != '' && $key == (int)$event['category']) {
                 $selected = 'selected';
             }
             $options .= '<option value="' . $key . '" ' . $selected . '>' . $category['label'] . '</option>';
@@ -249,7 +255,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
             $event['end_day']     = strtotime(htmlspecialchars(trim($_POST['event']['end_day'])));
             $event['end_time']    = strtotime(htmlspecialchars(trim($_POST['event']['end_time'])));
             $event['description'] = htmlspecialchars(trim($_POST['event']['description']));
-            $event['category'] = htmlspecialchars(trim($_POST['event']['category']));
+            $event['category']    = htmlspecialchars(trim($_POST['event']['category']));
 
             if (isset($_POST['event']['index'])) {
                 self::$events[$_POST['event']['index']] = $event;

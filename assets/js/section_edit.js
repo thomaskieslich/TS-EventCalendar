@@ -29,7 +29,7 @@ function gp_init_inline_edit(area_id, section_object) {
         + '</div>')
         .appendTo(gp_editor.option_area);
 
-    var categories = '';
+    var categories = '<option value=""> - </option>';
 
     $.each(EventCalendarCategories, function (index, value) {
         var selected = '';

@@ -92,7 +92,7 @@ class EventCalendarCommon
             fclose($file);
 
             //sort
-            array_multisort($start_day, SORT_DESC, $start_time, SORT_ASC, self::$events);
+            array_multisort($start_day, SORT_ASC, $start_time, SORT_DESC, self::$events);
 
             return true;
         }
@@ -119,13 +119,19 @@ class EventCalendarCommon
         return $lang_ext;
     }
 
-    public static function CreateList(int $maxItems = 15, $activeCatgories = [])
+    public static function CreateList($sectionData = [])
     {
+        if ( ! self::$events) {
+            return false;
+        }
         $current_date = getdate();
-        $content      = '';
+        $maxItems     = (isset($sectionData['maxItems'])) ? $sectionData['maxItems'] : 15;
+        $content      = '<div class="calendar-list">';
+        $i            = 0;
 
-        $content .= '<div class="calendar-list">';
-        $i = 0;
+        if (isset($sectionData['listTitle']) && $sectionData['listTitle'] != '') {
+            $content .= '<h3>' . $sectionData['listTitle'] . '</h3>';
+        }
 
         foreach (self::$events as $event) {
             if (
@@ -134,11 +140,8 @@ class EventCalendarCommon
             ) {
                 if (empty($activeCatgories)) {
                     $content .= self::CreateEntry($event);
-                } else {
-                    $result = array_intersect($event['categories'], $activeCatgories);
-                    if ( ! empty($result)) {
-                        $content .= self::CreateEntry($event);
-                    }
+                } else if (in_array($event['category'], $activeCatgories)) {
+                    $content .= self::CreateEntry($event);
                 }
             }
             $i++;
@@ -150,39 +153,44 @@ class EventCalendarCommon
     }
 
 
-    public static function CreateEntry($data)
+    public static function CreateEntry($event)
     {
         $entry = '';
 
-        $entry .= '<div class="entry">';
+        if ($event['category'] != '') {
+            $entry .= '<div class="entry catstyle-' . $event['category'] . '">';
+        } else {
+            $entry .= '<div class="entry">';
+        }
+
         $entry .= '<div class="head">';
-        $entry .= '<h3>' . $data['title'] . '</h3>';
+        $entry .= '<h3>' . $event['title'] . '</h3>';
         $entry .= '<div class="date">';
 
-        if ($data['start_day'] > 0) {
-            $entry .= '<span class="start-day">' . strftime(self::$configuration['dateFormat'], $data['start_day']) . '</span>';
+        if ($event['start_day'] > 0) {
+            $entry .= '<span class="start-day">' . strftime(self::$configuration['dateFormat'], $event['start_day']) . '</span>';
         }
 
-        if ($data['start_time'] > 0) {
-            $entry .= '<span class="start-time"> ' . strftime(self::$configuration['timeFormat'], $data['start_time']) . '</span>';
+        if ($event['start_time'] > 0) {
+            $entry .= '<span class="start-time"> ' . strftime(self::$configuration['timeFormat'], $event['start_time']) . '</span>';
         }
 
-        if ($data['end_day'] > 0) {
-            $entry .= ' <span class="end-day">' . strftime(self::$configuration['dateFormat'], $data['end_day']) . '</span>';
+        if ($event['end_day'] > 0) {
+            $entry .= ' <span class="end-day">' . strftime(self::$configuration['dateFormat'], $event['end_day']) . '</span>';
         }
 
-        if ($data['end_time'] > 0) {
-            $entry .= '<span class="end-time"> ' . strftime(self::$configuration['timeFormat'], $data['end_time']) . '</span>';
+        if ($event['end_time'] > 0) {
+            $entry .= '<span class="end-time"> ' . strftime(self::$configuration['timeFormat'], $event['end_time']) . '</span>';
         }
 
-        if ($data['category']) {
-            $entry .= '<span class="category"> ' . $data['category'] . '</span>';
+        if ($event['category'] != '') {
+            $entry .= '<span class="category" style="color: ' . self::$categories[$event['category']]['color'] . ' !important;"> ' . self::$categories[$event['category']]['label'] . '</span>';
         }
         $entry .= '</div>';
 
         $entry .= '</div>';
         $entry .= '<div class="body">';
-        $entry .= '<p>' . $data['description'] . '</p>';
+        $entry .= '<p>' . $event['description'] . '</p>';
         $entry .= '</div>';
         $entry .= '</div>';
 
