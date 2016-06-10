@@ -44,7 +44,6 @@ class EventCalendarSections extends EventCalendarCommon
         }
         $page->head_js[]   = $addonRelativeCode . '/assets/js/section_edit.js';
         $page->css_admin[] = $addonRelativeCode . '/assets/css/section_edit.css';
-
         EventCalendarCommon::Init();
         $categoriesToShow = EventCalendarCommon::$categories;
         $catgroup         = [];

@@ -13,7 +13,6 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         $cmd = common::GetCommand();
         switch ($cmd) {
 
-            //creating
             case 'new_category':
                 self::NewCategory();
 
@@ -43,32 +42,25 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         $content = '';
         $content .= '<div class="inline_box">';
         $content .= '<h3>' . self::$langExt['Edit Categories'] . '</h3>';
-        $content .= '<form name="categories" action="' . common::GetUrl('Admin_EventCalendar_Categories') . '" method="post">';
+        $content .= '<form name="categories" id="edit-categories" action="' . common::GetUrl('Admin_EventCalendar_Categories') . '" method="post">';
         $content .= '<table class="bordered">';
 
         $content .= '<thead><tr>';
         $content .= '<th>&nbsp;</th>';
         $content .= '<th>' . self::$langExt['Category'] . '</th>';
-//        $content .= '<th>' . self::langExt['Events'] . '</th>';
-//        $content .= '<th>' . self::langExt['Hidden'] . '</th>';
+        $content .= '<th>' . self::$langExt['CatColor'] . '</th>';
         $content .= '<th>' . self::$langExt['Options'] . '</th>';
         $content .= '</tr></thead>';
 
         $content .= '<tbody class="sortable_table">';
-        if (count(self::$categories > 0)) {
+        if (count(self::$categories) > 0) {
             foreach (self::$categories as $key => $value) {
                 $content .= '<tr><td style="vertical-align:middle">';
                 $content .= '<img src="' . $addonRelativeCode . '/assets/img/grip.png" height="15" width="15" style="padding:2px;cursor:pointer;"/>';
                 $content .= '</td><td>';
                 $content .= '<input type="text" name="categories[' . $key . '][label]" value="' . $value['label'] . '" class="gpinput" />';
-//                $content .= '</td><td>';
-//                $content .= '123';
-//                $content .= '</td><td>';
-//                $checked = '';
-//                if (isset($value['hidden'])) {
-//                    $checked = 'checked';
-//                }
-//                $content .= '<input type="checkbox" ' . $checked . ' name="categories[' . $key . '][hidden]" />';
+                $content .= '</td><td>';
+                $content .= '<input type="text" name="categories[' . $key . '][color]" class="colorpicker" value="' . @$value['color'] . '""/></div>';
                 $content .= '</td><td>';
                 $content .= common::Link(
                     'Admin_EventCalendar_Categories',
@@ -97,6 +89,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
         $content .= '</form>';
 
         $content .= '</div>';
+        $content .= '<script>initColorpicker();</script>';
 
         echo $content;
     }
@@ -107,17 +100,19 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
 
         $content = '';
         $content .= '<div class="inline_box">';
-        $content .= '<h3>' . self::langExt['New Categorie'] . '</h3>';
+        $content .= '<h3>' . self::$langExt['New Categorie'] . '</h3>';
 
         $content .= '<form name="addcategory" action="' . common::GetUrl('Admin_EventCalendar_Categories') . '" method="post">';
         $content .= '<input type="hidden" name="cmd" value="save_new_category" />';
-        $content .= '<p>' . $langmessage['title'] . ' <input type="text" name="new_category" value="" class="gpinput" /></p>';
+        $content .= '<p>' . $langmessage['title'] . ' <input type="text" name="label" value="" class="gpinput" /></p>';
+        $content .= '<p>' . self::$langExt['CatColor'] . ' <input type="text" name="color" value="" class="gpinput colorpicker" /></p>';
 
         $content .= '<p><input type="submit" value="' . $langmessage['save'] . '" class="gppost gpsubmit"/>';
         $content .= '<input type="submit" name="cmd" value="' . $langmessage['cancel'] . '" class="admin_box_close gpcancel"/></p>';
 
         $content .= '</form>';
         $content .= '</div>';
+        $content .= '<script>initColorpicker();</script>';
 
         echo $content;
     }
@@ -126,8 +121,11 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
     {
         global $langmessage;
 
-        if (isset($_POST) && $_POST['new_category']) {
-            self::$categories[]['label'] = htmlspecialchars(trim($_POST['new_category']));
+        if (isset($_POST) && $_POST['label']) {
+            $new          = [];
+            $new['label'] = htmlspecialchars(trim($_POST['label']));
+            $new['color'] = htmlspecialchars(trim($_POST['color']));
+            self::$categories[] = $new;
             self::SaveCategories();
         } else {
             msg($langmessage['OOPS']);
@@ -150,9 +148,7 @@ class EventCalendarAdminCategories extends EventCalendarAdmin
             self::$categories = [];
             foreach ($_POST['categories'] as $key => $value) {
                 self::$categories[$key]['label'] = htmlspecialchars(trim($value['label']));
-//                if (isset($value['hidden'])) {
-//                    $this->categories[$key]['hidden'] = htmlspecialchars(trim($value['hidden']));
-//                }
+                self::$categories[$key]['color'] = htmlspecialchars(trim($value['color']));
             }
             self::SaveCategories();
             self::ShowCategories();

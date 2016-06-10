@@ -16,6 +16,7 @@ $lang_ext = array(
     'Description'=>		'Description',
     'Categories'=>		'Categories',
     'Category'=>		'Category',
+    'CatColor'=>		'Color',
     'Events'=>		'Events',
     'Event'=>		'Event',
     'Visible'=>		'Visible',

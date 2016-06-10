@@ -47,7 +47,7 @@ class EventCalendarCommon
             self::$configuration = $configuration;
         } else {
             self::$configuration = [
-                'title'          => 'EventCalendar',
+                'title'      => 'EventCalendar',
                 'dateFormat' => '%d.%m.%Y',
                 'timeFormat' => '%H:%M',
             ];
@@ -85,10 +85,9 @@ class EventCalendarCommon
                     $event[$cols[$c]] = $col;
                     $c++;
                 }
-                $event['categories'] = explode(',', $event['categories']);
-                self::$events[]      = $event;
-                $start_day[]         = (int)$line[2];
-                $start_time[]        = (int)$line[3];
+                self::$events[] = $event;
+                $start_day[]    = (int)$line[2];
+                $start_time[]   = (int)$line[3];
             }
             fclose($file);
 
@@ -161,23 +160,23 @@ class EventCalendarCommon
         $entry .= '<div class="date">';
 
         if ($data['start_day'] > 0) {
-            $entry .= '<span class="start-day">' . strftime(self::$configuration['dateFormatSite'], $data['start_day']) . '</span>';
+            $entry .= '<span class="start-day">' . strftime(self::$configuration['dateFormat'], $data['start_day']) . '</span>';
         }
 
         if ($data['start_time'] > 0) {
-            $entry .= '<span class="start-time"> ' . strftime(self::$configuration['timeFormatSite'], $data['start_time']) . '</span>';
+            $entry .= '<span class="start-time"> ' . strftime(self::$configuration['timeFormat'], $data['start_time']) . '</span>';
         }
 
         if ($data['end_day'] > 0) {
-            $entry .= ' <span class="end-day">' . strftime(self::$configuration['dateFormatSite'], $data['end_day']) . '</span>';
+            $entry .= ' <span class="end-day">' . strftime(self::$configuration['dateFormat'], $data['end_day']) . '</span>';
         }
 
         if ($data['end_time'] > 0) {
-            $entry .= '<span class="end-time"> ' . strftime(self::$configuration['timeFormatSite'], $data['end_time']) . '</span>';
+            $entry .= '<span class="end-time"> ' . strftime(self::$configuration['timeFormat'], $data['end_time']) . '</span>';
         }
 
-        if ($data['categories']) {
-            $entry .= '<span class="categories"> ' . join(',', $data['categories']) . '</span>';
+        if ($data['category']) {
+            $entry .= '<span class="category"> ' . $data['category'] . '</span>';
         }
         $entry .= '</div>';
 

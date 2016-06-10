@@ -66,25 +66,25 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         foreach (self::$events as $key => $event) {
             $content .= '<tr>';
             if ($event['start_day']) {
-                $content .= '<td>' . strftime(self::$configuration['dateFormatSite'], $event['start_day']) . '</td>';
+                $content .= '<td>' . strftime('%d.%m.%Y', $event['start_day']) . '</td>';
             } else {
                 $content .= '<td>&nbsp;</td>';
             }
 
             if ($event['start_time']) {
-                $content .= '<td>' . strftime(self::$configuration['timeFormatSite'], $event['start_time']) . '</td>';
+                $content .= '<td>' . strftime(self::$configuration['timeFormat'], $event['start_time']) . '</td>';
             } else {
                 $content .= '<td>&nbsp;</td>';
             }
 
             if ($event['end_day']) {
-                $content .= '<td>' . strftime(self::$configuration['dateFormatSite'], $event['end_day']) . '</td>';
+                $content .= '<td>' . strftime(self::$configuration['dateFormat'], $event['end_day']) . '</td>';
             } else {
                 $content .= '<td>&nbsp;</td>';
             }
 
             if ($event['end_time']) {
-                $content .= '<td>' . strftime(self::$configuration['timeFormatSite'], $event['end_time']) . '</td>';
+                $content .= '<td>' . strftime(self::$configuration['timeFormat'], $event['end_time']) . '</td>';
             } else {
                 $content .= '<td>&nbsp;</td>';
             }
@@ -208,12 +208,12 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $content .= '</td></tr>';
 
         $content .= '<tr><td colspan="2">';
-        $content .= '<label for="categories">' . self::$langExt['Categories'] . '</label><select name="event[categories][]" multiple class="gpinput full_width">';
-        $options = '';
+        $content .= '<label for="category">' . self::$langExt['Category'] . '</label><select name="event[category]" class="gpinput full_width">';
+        $options = '<option value="">-</option>';
 
         foreach (self::$categories as $key => $category) {
             $selected = '';
-            if (in_array($key, $event['categories'])) {
+            if (isset($event['category']) && $key == $event['category']) {
                 $selected = 'selected';
             }
             $options .= '<option value="' . $key . '" ' . $selected . '>' . $category['label'] . '</option>';
@@ -249,12 +249,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
             $event['end_day']     = strtotime(htmlspecialchars(trim($_POST['event']['end_day'])));
             $event['end_time']    = strtotime(htmlspecialchars(trim($_POST['event']['end_time'])));
             $event['description'] = htmlspecialchars(trim($_POST['event']['description']));
-
-            if (isset($_POST['event']['categories'])) {
-                $event['categories'] = join(',', $_POST['event']['categories']);
-            } else {
-                $event['categories'] = '';
-            }
+            $event['category'] = htmlspecialchars(trim($_POST['event']['category']));
 
             if (isset($_POST['event']['index'])) {
                 self::$events[$_POST['event']['index']] = $event;
@@ -289,7 +284,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
     protected function SaveEvents()
     {
         if (count(self::$events) == 0) {
-            unlink($this->eventFile);
+            unlink(self::$eventFile);
 
             return null;
         }
@@ -297,10 +292,6 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
         $file = fopen(self::$eventFile, 'w');
         fputcsv($file, array_keys(reset(self::$events)));
         foreach (self::$events as $row) {
-            if(is_array($row['categories'])){
-                $row['categories'] = join(',', $row['categories']);
-            }
-
             fputcsv($file, $row);
         }
         fclose($file);
