@@ -219,7 +219,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
 
         foreach (self::$categories as $key => $category) {
             $selected = '';
-            if ($event['category'] != '' && $key == (int)$event['category']) {
+            if (isset($event['category']) && $key == (int)$event['category']) {
                 $selected = 'selected';
             }
             $options .= '<option value="' . $key . '" ' . $selected . '>' . $category['label'] . '</option>';

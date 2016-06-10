@@ -6,6 +6,7 @@ gpPlugin_incl('EventCalendarCommon.php');
 
 class EventCalendarSections extends EventCalendarCommon
 {
+
     public static function SectionTypes($section_types)
     {
         $section_types['CalendarList'] = array(
@@ -79,6 +80,10 @@ class EventCalendarSections extends EventCalendarCommon
             return $section_data;
         };
 
+        $section_data['content'] = '';
+        if(!self::$categories){
+            EventCalendarCommon::Init();
+        }
         $section_data['content'] .= EventCalendarCommon::CreateList($section_data);
 
         return $section_data;

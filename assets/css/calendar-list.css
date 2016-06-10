@@ -1,0 +1,54 @@
+.calendar-list {
+  clear: both; }
+  .calendar-list .title {
+    display: inline-block; }
+  .calendar-list .legend {
+    float: right;
+    clear: both; }
+    .calendar-list .legend .category {
+      position: relative;
+      line-height: 40px;
+      display: inline-block;
+      margin-left: 12px; }
+    .calendar-list .legend .color {
+      display: inline-block;
+      position: relative;
+      top: 2px;
+      margin-right: 3px;
+      width: 16px;
+      height: 16px; }
+  .calendar-list .entry {
+    border: 1px solid #999;
+    margin-bottom: 12px;
+    height: 100%; }
+    @media screen and (min-width: 40em) {
+      .calendar-list .entry {
+        display: flex; } }
+  .calendar-list .cat-color {
+    border-bottom: 1px solid #999;
+    height: 12px; }
+    @media screen and (min-width: 40em) {
+      .calendar-list .cat-color {
+        float: left;
+        width: 1.5%;
+        height: auto;
+        border-bottom: none;
+        border-right: 1px solid #999; } }
+  .calendar-list .date {
+    padding: 5px; }
+    @media screen and (min-width: 40em) {
+      .calendar-list .date {
+        float: left;
+        width: 25%; } }
+  .calendar-list .body {
+    padding: 5px; }
+    @media screen and (min-width: 40em) {
+      .calendar-list .body {
+        display: inline-block;
+        width: 73%; } }
+    .calendar-list .body .title {
+      font-weight: bold; }
+  .calendar-list .location .loc-label {
+    font-weight: bold; }
+
+/*# sourceMappingURL=calendar-list.css.map */

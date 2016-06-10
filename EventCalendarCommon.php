@@ -121,6 +121,10 @@ class EventCalendarCommon
 
     public static function CreateList($sectionData = [])
     {
+        global $page, $addonFolderName;
+
+        $page->css_user[] = '/data/_addoncode/' . $addonFolderName . '/assets/css/calendar-list.css';
+
         if ( ! self::$events) {
             return false;
         }
@@ -130,7 +134,17 @@ class EventCalendarCommon
         $i            = 0;
 
         if (isset($sectionData['listTitle']) && $sectionData['listTitle'] != '') {
-            $content .= '<h3>' . $sectionData['listTitle'] . '</h3>';
+            $content .= '<h3 class="title">' . $sectionData['listTitle'] . '</h3>';
+        }
+
+        if (isset($sectionData['categories']) && $sectionData['categories'] != '') {
+            $content .= '<div class="legend">';
+            foreach ($sectionData['categories'] as $legend){
+                $content .= '<div class="category"><div class="color" style="background-color: ' . @self::$categories[$legend]['color'] . ';"> </div>';
+                $content .= self::$categories[$legend]['label'] . '</div>';
+            }
+            $content .= '</div>';
+            $content .= '<div class="gpclear"> </div>';
         }
 
         foreach (self::$events as $event) {
@@ -138,9 +152,9 @@ class EventCalendarCommon
                 (int)$event['start_day'] >= $current_date[0]
                 && $i < $maxItems
             ) {
-                if (empty($activeCatgories)) {
+                if (empty($sectionData['categories'])) {
                     $content .= self::CreateEntry($event);
-                } else if (in_array($event['category'], $activeCatgories)) {
+                } else if (in_array($event['category'], $sectionData['categories'])) {
                     $content .= self::CreateEntry($event);
                 }
             }
@@ -162,36 +176,48 @@ class EventCalendarCommon
         } else {
             $entry .= '<div class="entry">';
         }
-
-        $entry .= '<div class="head">';
-        $entry .= '<h3>' . $event['title'] . '</h3>';
+        $entry .= '<div class="cat-color" style="background-color: ' . @self::$categories[$event['category']]['color'] . ';" >&nbsp;</div>';
         $entry .= '<div class="date">';
-
+        $entry .= '<div class="day">';
         if ($event['start_day'] > 0) {
             $entry .= '<span class="start-day">' . strftime(self::$configuration['dateFormat'], $event['start_day']) . '</span>';
         }
+        if ($event['end_day'] > 0) {
+            $entry .= ' <span class="end-day"> - ' . strftime(self::$configuration['dateFormat'], $event['end_day']) . '</span>';
+        }
+        $entry .= '</div>';
 
+        $entry .= '<div class="time">';
         if ($event['start_time'] > 0) {
             $entry .= '<span class="start-time"> ' . strftime(self::$configuration['timeFormat'], $event['start_time']) . '</span>';
         }
-
-        if ($event['end_day'] > 0) {
-            $entry .= ' <span class="end-day">' . strftime(self::$configuration['dateFormat'], $event['end_day']) . '</span>';
-        }
-
         if ($event['end_time'] > 0) {
-            $entry .= '<span class="end-time"> ' . strftime(self::$configuration['timeFormat'], $event['end_time']) . '</span>';
-        }
-
-        if ($event['category'] != '') {
-            $entry .= '<span class="category" style="color: ' . self::$categories[$event['category']]['color'] . ' !important;"> ' . self::$categories[$event['category']]['label'] . '</span>';
+            $entry .= '<span class="end-time"> - ' . strftime(self::$configuration['timeFormat'], $event['end_time']) . '</span>';
         }
         $entry .= '</div>';
 
         $entry .= '</div>';
+
         $entry .= '<div class="body">';
-        $entry .= '<p>' . $event['description'] . '</p>';
+        $entry .= '<div class="title">' . $event['title'] . '</div>';
+        $entry .= '<div class="description">' . $event['description'] . '</div>';
+        if($event['location'] != ''){
+            $entry .= '<div class="location">';
+            $entry .= '<span class="loc-label">' . self::$langExt['Location'] . ': </span>';
+            $entry .= '<span class="loc-value">' . $event['location'] . '</span>';
+            $entry .= '</div>';
+        }
         $entry .= '</div>';
+
+//        if ($event['category'] != '') {
+//            $entry .= '<span class="category" style="color: ' . @self::$categories[$event['category']]['color'] . ' !important;"> ';
+//            $entry .= self::$categories[$event['category']]['label'] . '</span>';
+//        }
+//
+//        $entry .= '</div>';
+//        $entry .= '<div class="body">';
+//        $entry .= '<p>' . $event['description'] . '</p>';
+//        $entry .= '</div>';
         $entry .= '</div>';
 
         return $entry;
