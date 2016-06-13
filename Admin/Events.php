@@ -6,39 +6,33 @@ gpPlugin_incl('Admin/Admin.php');
 
 class EventCalendarAdminEvents extends EventCalendarAdmin
 {
+    public $PluginUrl;
 
     public function __construct()
     {
         parent::__construct();
+        $this->PluginUrl = "Admin_EventCalendar_Events";
 
         $cmd = common::GetCommand();
         switch ($cmd) {
 
             case 'edit_event':
                 $this->EditEvent();
-
                 return;
             case 'update_event':
                 $this->UpdateEvent();
-
                 return;
             case 'delete_event':
                 $this->DeleteEvent();
-
-                return;
+                break;
             case 'reload_events':
                 $this->LoadEvents();
-                $this->ShowEvents();
-
                 return;
             case 'save_new_event';
                 $this->SaveNewEvent();
-
-                return;
-            default;
-                $this->ShowEvents();
+                break;
         }
-
+        $this->ShowEvents();
     }
 
     protected function ShowEvents()
@@ -107,8 +101,12 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
             $content .= common::Link(
                 'Admin_EventCalendar_Events',
                 $langmessage['delete'],
-                'cmd=delete_event&index=' . $key,
-                ' name="gpabox" class="gpconfirm gpsubmit" title="' . self::$langExt['Delete Event'] . '" '
+                'cmd=delete_event&del_id=' . $key,
+                array(
+                    'class'=>'gpsubmit gpconfirm',
+                    'data-cmd'=>'cnreq',
+                    'title'=>self::$langExt['Delete Event']
+                )
             );
             $content .= '</td>';
             $content .= '</tr>';
@@ -274,15 +272,14 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
     protected function DeleteEvent()
     {
         global $langmessage;
-        if (isset($_GET) && $_GET['index'] >= 0) {
-            unset(self::$events[$_GET['index']]);
+        if (isset($_POST) && $_POST['del_id'] >= 0) {
+            unset(self::$events[$_GET['del_id']]);
+            self::SaveEvents();
             msg(self::$langExt['deleted_event']);
-
-            $this->SaveEvents();
-            $this->LoadEvents();
-            $this->ShowEvents();
-        } else {
+            return true;
+        }else {
             msg($langmessage['OOPS']);
+            return false;
         }
 
     }
