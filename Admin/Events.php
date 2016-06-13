@@ -27,6 +27,7 @@ class EventCalendarAdminEvents extends EventCalendarAdmin
                 break;
             case 'reload_events':
                 $this->LoadEvents();
+                $this->ShowEvents();
                 return;
             case 'save_new_event';
                 $this->SaveNewEvent();
