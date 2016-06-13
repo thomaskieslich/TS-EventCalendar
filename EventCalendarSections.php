@@ -26,6 +26,7 @@ class EventCalendarSections extends EventCalendarCommon
         $section['listTitle']  = "List Title";
         $section['maxItems']   = 15;
         $section['categories'] = [];
+        $section['layout'] = 'List';
         $section['content']    = '<h3 id="list-title">' . $section['listTitle'] . '</h3>';
 
         return $section;
@@ -70,6 +71,7 @@ class EventCalendarSections extends EventCalendarCommon
         } else {
             $page->file_sections[$section]['categories'] = [];
         }
+        $page->file_sections[$section]['layout']  = $_POST['layout'];
 
         return true;
     }

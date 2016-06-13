@@ -7,7 +7,8 @@ function gp_init_inline_edit(area_id, section_object) {
         save_path: gp_editing.get_path(area_id),
         option_area: $('<form id="ec-options-form"/>').prependTo('#ckeditor_controls'),
 
-        resetDirty         : function() {},
+        resetDirty: function () {
+        },
         gp_saveData: function () {
             var options = $('#ec-options-form').serialize();
             return '&' + options;
@@ -29,7 +30,8 @@ function gp_init_inline_edit(area_id, section_object) {
         + '</div>')
         .appendTo(gp_editor.option_area);
 
-    var categories = '<option value=""> - </option>';
+    // var categories = '<option value=""> - </option>';
+    var categories = '';
 
     $.each(EventCalendarCategories, function (index, value) {
         var selected = '';
@@ -42,12 +44,30 @@ function gp_init_inline_edit(area_id, section_object) {
     $(
         '<div class="full_width">'
         + '<label>Categories</label>'
-        + '</label><select name="categories[]" id multiple class="gpinput full_width">'
+        + '<select name="categories[]" multiple class="gpinput full_width">'
         + categories
         + '</select>'
+        + '</div>'
+    ).appendTo(gp_editor.option_area);
+
+
+    var layouts = ['List', 'Teaser'];
+    $.each(layouts, function (index, value) {
+        var selected = '';
+        if(section_object.layout == value){
+            selected = 'selected';
+        }
+        layouts += '<option value="' + value + '" ' + selected + '>' + value + '</option>';
+    });
+
+    $(
+        '<div class="full_width">'
+        + '<label>Layout</label>'
+        + '<select name="layout" class="full_width">'
+        + layouts
+        + '</select>'
         + '</div></form>'
-    )
-        .appendTo(gp_editor.option_area);
+    ).appendTo(gp_editor.option_area);
 
     loaded();
 }
